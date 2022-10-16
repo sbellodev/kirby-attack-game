@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gattoalaparato</title>
+    <style>
+      body {
+        display: grid;
+        background-color: chocolate;
+        font-family: sans-serif;
+      }
+      h1 {
+        font-size: 42px;
+        text-align: center;
+      }
+      img {
+        width: 120px;
+        height: 120px;
+        transform: scaleX(-1);
+        object-fit: contain;
+      }
+      .container {
+        background-color: bisque;
+        display: grid;
+        justify-self: center;
+        width: 500px;
+        height: auto;
+        border-radius: 2px;
+        padding: 10px;
+        grid-template-rows: auto auto;
+      }
+      .enemy-player,
+      .own-player {
+        display: flex;
+        justify-content: space-around;
+        font-size: 21px;
+        font-weight: bold;
+      }
+      .enemy-HP-num,
+      .own-HP-num {
+        text-align: right;
+        font-size: 14px;
+        padding-top: 3px;
+      }
+      .enemy-HP-bar,
+      .own-HP-bar {
+        display: block;
+        width: 150px;
+        height: 12px;
+        background-color: white;
+        border: solid black 1px;
+      }
+      .enemy-HP-bar-fill,
+      .own-HP-bar-fill {
+        background-color: green;
+        width: 150px;
+        height: 12px;
+      }
+      .enemy-profile,
+      .own-profile {
+        width: 120px;
+        height: 120px;
+      }
+
+      /* DIALOG TEXT BOX */
+      .dialog {
+        background-color: white;
+        display: grid;
+        place-items: center;
+        place-self: end;
+        grid-template-columns: auto auto;
+        width: 100%;
+        height: 100px;
+      }
+      .dialog div:hover {
+        color: blue;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .dialog div:hover::before {
+        content: "> ";
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Kirby Attack</h1>
+    <div class="container">
+      <div class="players">
+        <div class="enemy-player">
+          <div class="enemy-stats">
+            <div class="enemy-HP">
+              <div class="enemy-name">Waddle Dee</div>
+              <div class="enemy-HP-bar">
+                <div class="enemy-HP-bar-fill"></div>
+              </div>
+              <div class="enemy-HP-num">100/100 HP</div>
+            </div>
+          </div>
+          <div class="enemy-profile">
+            <img class="enemy-profile-image" src="enemy.png" />
+          </div>
+        </div>
+
+        <div class="own-player">
+          <div class="own-profile">
+            <img class="own-profile-image" src="player.png" />
+          </div>
+          <div class="own-stats">
+            <div class="own-HP">
+              <div class="own-name">Kirby</div>
+              <div class="own-HP-bar">
+                <div class="own-HP-bar-fill"></div>
+              </div>
+              <div class="own-HP-num">100/100 HP</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog">
+        <div class="att1" onclick="doAttack(10)">Kick</div>
+        <div class="att2" onclick="doAttack(20)">Punch</div>
+        <div class="att3" onclick="doAttack(30)">Dive Kick</div>
+        <div class="att4" onclick="doAttack(40)">Suplex</div>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    let elEHP = document.getElementsByClassName("enemy-HP-bar")[0].clientWidth;
+    let barFill = document.getElementsByClassName("enemy-HP-bar-fill")[0];
+    let barText = document.getElementsByClassName("enemy-HP-num")[0];
+    let eImage = document.getElementsByClassName("enemy-profile-image")[0];
+    let maxHP = 100;
+    let cHP = 100;
+
+    function algorithm(num) {
+      if (cHP - num <= 0) {
+        cHP = 0;
+        return 0;
+      }
+
+      cHP = cHP - num;
+      let result = (cHP * elEHP) / maxHP;
+      return result;
+    }
+
+    function doAttack(attackDMG) {
+      eHP = algorithm(attackDMG);
+      if (eHP === 0) enemyFaint(eImage);
+      barFill.style.width = eHP + "px";
+      barText.innerHTML = cHP.toString() + "/100 HP";
+    }
+
+    function enemyFaint(el) {
+      let speed = 2000;
+      let seconds = speed / 1000;
+      el.style.transition = "opacity " + seconds + "s ease";
+
+      el.style.opacity = 0;
+      setTimeout(function () {
+        el.parentNode.removeChild(el);
+      }, speed);
+    }
+  </script>
+</html>
